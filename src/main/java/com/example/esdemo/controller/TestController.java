@@ -1,5 +1,7 @@
 package com.example.esdemo.controller;
 
+import com.example.esdemo.model.ESData;
+import com.example.esdemo.utils.CreateData;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by huanglijun on 2018/11/27
@@ -38,6 +41,10 @@ public class TestController {
                 "\"postDate\":\"2013-01-30\"," +
                 "\"message\":\"trying out Elasticsearch\"" +
                 "}";
+
+        ESData esData = new ESData();
+        esData.setUser(CreateData.getESData());
+        esData.setData(new Date());
 
         IndexResponse response = client.prepareIndex("twitter","_doc")
                 .setSource(json, XContentType.JSON)
