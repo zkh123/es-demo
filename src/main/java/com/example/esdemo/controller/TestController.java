@@ -1,10 +1,12 @@
 package com.example.esdemo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.esdemo.model.ESData;
 import com.example.esdemo.utils.CreateData;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.recycler.Recycler;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,10 +48,13 @@ public class TestController {
 
         ESData esData = new ESData();
         esData.setUser(CreateData.getESData());
-        esData.setData(new Date());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        esData.setData(formatter.format(new Date()));
+        esData.setMessage(CreateData.getESData() + CreateData.getESData() + CreateData.getESData());
+
 
         IndexResponse response = client.prepareIndex("twitter","_doc")
-                .setSource(json, XContentType.JSON)
+                .setSource(JSONObject.toJSONString(esData), XContentType.JSON)
                 .get();
 
         String _index = response.getIndex();
